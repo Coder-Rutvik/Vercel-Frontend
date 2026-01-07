@@ -1,30 +1,30 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://hotel-reservation-system-backend-1.onrender.com/api';
 
 export const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
-  
+
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
-  
+
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
-  
+
   const url = `${API_BASE_URL}${endpoint}`;
-  
+
   try {
     const response = await fetch(url, {
       ...options,
       headers,
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || 'API request failed');
     }
-    
+
     return await response.json();
   } catch (error) {
     console.error('API Error:', error);

@@ -1,3 +1,6 @@
+// ✅ FIXED: frontend/src/api/config.js
+// ⚠️ NOTE: For Claude.ai artifacts, use React state instead of localStorage
+
 // Dynamic API URL based on environment
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://hotel-reservation-system-backend-6nf6.onrender.com/api';
 
@@ -5,8 +8,18 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://hotel-reservation
 console.log('📱 Frontend Environment:', process.env.NODE_ENV);
 console.log('🔗 API Base URL:', API_BASE_URL);
 
+// ✅ FIX: Token management using sessionStorage (temporary) or memory
+// For production, use httpOnly cookies or proper JWT handling
+const TokenManager = {
+  // Use sessionStorage instead of localStorage (better for security)
+  getToken: () => sessionStorage.getItem('auth_token'),
+  setToken: (token) => sessionStorage.setItem('auth_token', token),
+  removeToken: () => sessionStorage.removeItem('auth_token'),
+  hasToken: () => !!sessionStorage.getItem('auth_token')
+};
+
 export const apiRequest = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('token');
+  const token = TokenManager.getToken();
   
   const headers = {
     'Content-Type': 'application/json',
@@ -25,7 +38,7 @@ export const apiRequest = async (endpoint, options = {}) => {
     const response = await fetch(url, {
       ...options,
       headers,
-      credentials: 'include'
+      credentials: 'include' // Important for cookies
     });
 
     if (!response.ok) {
@@ -37,6 +50,12 @@ export const apiRequest = async (endpoint, options = {}) => {
         errorData = JSON.parse(errorText);
       } catch {
         errorData = { message: errorText || `API request failed (${response.status})` };
+      }
+      
+      // ✅ FIX: Auto-logout on 401
+      if (response.status === 401) {
+        TokenManager.removeToken();
+        window.location.href = '/'; // Redirect to home
       }
       
       throw new Error(errorData.message || errorData.error);
@@ -85,7 +104,7 @@ export const testBackendConnection = async () => {
   }
 };
 
-// ✅ COMPLETE hotelApi OBJECT
+// ✅ COMPLETE hotelApi OBJECT with all endpoints
 export const hotelApi = {
   // Test connection
   testConnection: testBackendConnection,
@@ -128,6 +147,10 @@ export const hotelApi = {
 
   getRoomByNumber: (roomNumber) => apiRequest(`/rooms/number/${roomNumber}`),
 
+  createSampleRooms: () => apiRequest('/rooms/create-sample', {
+    method: 'POST'
+  }),
+
   // Booking Endpoints
   bookRooms: (data) => apiRequest('/bookings', {
     method: 'POST',
@@ -149,5 +172,12 @@ export const hotelApi = {
 
   resetAllBookings: () => apiRequest('/rooms/reset-all', {
     method: 'POST'
+  }),
+
+  seedRooms: () => apiRequest('/rooms/seed-rooms', {
+    method: 'POST'
   })
 };
+
+// Export token manager for use in AuthContext
+export { TokenManager };

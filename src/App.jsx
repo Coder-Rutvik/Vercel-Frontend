@@ -79,22 +79,6 @@ function App() {
     load();
   }, [isAuthenticated]);
 
-  // ✅ FIX: Remove the problematic useEffect that was causing date issues
-  // useEffect(() => {
-  //   const today = new Date();
-  //   const tomorrow = new Date(today);
-  //   tomorrow.setDate(tomorrow.getDate() + 1);
-  //   const dayAfter = new Date(tomorrow);
-  //   dayAfter.setDate(dayAfter.getDate() + 1);
-  // 
-  //   if (!checkInDate) {
-  //     setCheckInDate(tomorrow.toISOString().split('T')[0]);
-  //   }
-  //   if (!checkOutDate) {
-  //     setCheckOutDate(dayAfter.toISOString().split('T')[0]);
-  //   }
-  // }, [checkInDate, checkOutDate]);
-
   const fetchRooms = async () => {
     try {
       setRoomsLoading(true);
@@ -263,29 +247,6 @@ function App() {
     }
   };
 
-  // ✅ FIX: Add emergency auto-fix button
-  const handleAutoFixRooms = async () => {
-    try {
-      setLoading(true);
-      setMessage('🔄 Auto-fixing rooms...');
-      
-      // Try GET request first
-      const response = await fetch('http://localhost:5000/api/auto-fix-rooms');
-      const data = await response.json();
-      
-      if (data.success) {
-        setMessage(`✅ ${data.message} - Total rooms: ${data.rooms?.total || 0}`);
-        await fetchRooms();
-      } else {
-        setMessage(`❌ ${data.message}`);
-      }
-    } catch (error) {
-      setMessage(`❌ Auto-fix failed: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="app">
       <header className="header">
@@ -303,10 +264,6 @@ function App() {
                 </button>
                 <button onClick={logout} className="header-btn logout-btn">
                   Logout
-                </button>
-                {/* ✅ ADD AUTO-FIX BUTTON */}
-                <button onClick={handleAutoFixRooms} className="header-btn fix-btn" title="Emergency fix for rooms">
-                  🔧 Fix Rooms
                 </button>
               </>
             ) : (

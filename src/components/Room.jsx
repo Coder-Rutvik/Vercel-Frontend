@@ -1,36 +1,22 @@
-import React, { useState, useEffect } from 'react';
+﻿import React from 'react';
 
 const Room = ({ room, isSelected }) => {
-  const [isCurrentlySelected, setIsCurrentlySelected] = useState(false);
-  
-  useEffect(() => {
-    if (isSelected) {
-      setIsCurrentlySelected(true);
-      const timer = setTimeout(() => {
-        setIsCurrentlySelected(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    } else {
-      setIsCurrentlySelected(false);
-    }
-  }, [isSelected]);
+  const isBooked = room.status === 'booked';
 
   const getRoomClass = () => {
-    if (isCurrentlySelected) {
-      return 'room selected';
-    } else if (room.booked) {
-      return 'room booked';
-    } else {
-      return 'room available';
-    }
+    let classes = 'room';
+    if (isSelected) classes += ' selected';
+    else if (isBooked) classes += ' booked';
+    else classes += ' available';
+    return classes;
   };
 
   return (
-    <div className={getRoomClass()} title={`Room ${room.number} - ${isCurrentlySelected ? 'Selected' : room.booked ? 'Booked' : 'Available'}`}>
-      {room.number}
-      {isCurrentlySelected && (
-        <div className="selected-badge">✓</div>
-      )}
+    <div
+      className={getRoomClass()}
+      title={`Room ${room.roomNumber} (${isBooked ? 'Booked' : 'Available'})`}
+    >
+      <div className="room-number">{room.roomNumber}</div>
     </div>
   );
 };

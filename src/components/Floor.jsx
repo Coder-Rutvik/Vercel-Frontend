@@ -1,27 +1,20 @@
 import React from 'react';
 import Room from './Room';
 
-const Floor = ({ floor, bookedRooms, isTopFloor }) => {
+const Floor = ({ floor, bookedRooms }) => {
   return (
     <div className="floor">
-      <div className="floor-header">
-        <div className="lift-stairs">
-          <div>🚪</div>
-          <span>Lift/Stairs</span>
-        </div>
-        <div className="floor-number">{floor.floorNumber}</div>
-        <div className="floor-title">
-          Floor {floor.floorNumber} {isTopFloor ? '(Top Floor)' : ''}
-        </div>
-      </div>
-      
+      <span className="floor-label">Floor {floor.floorNumber}</span>
       <div className="floor-content">
-        <div className="rooms-container">
+        <div className="lift-section">
+          <div className="lift-box">↕️</div>
+        </div>
+        <div className="rooms-row">
           {floor.rooms.map(room => (
             <Room
-              key={room.number}
+              key={room.roomNumber}
               room={room}
-              isSelected={bookedRooms.includes(room.number)}
+              isSelected={bookedRooms.includes(room.roomNumber)}
             />
           ))}
         </div>

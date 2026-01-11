@@ -246,6 +246,12 @@ body {
   flex-wrap: nowrap;
   gap: 12px;
   padding: 10px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.rooms-row::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .legend {
@@ -256,6 +262,7 @@ body {
   background: rgba(0,0,0,0.2);
   padding: 20px;
   border-radius: 20px;
+  flex-wrap: wrap;
 }
 
 .legend-item { display: flex; align-items: center; gap: 10px; color: white; font-size: 14px; font-weight: 600; }
@@ -264,5 +271,67 @@ body {
 .legend-bulb.booked { background: #EF4444; }
 .legend-bulb.selected { background: #F59E0B; }
 
-.message-box { text-align: center; margin-bottom: 40px; }
+.message-box { text-align: center; margin-bottom: 40px; min-height: 50px; }
 .message { font-weight: 700; font-size: 16px; padding: 12px 24px; border-radius: 12px; display: inline-block; color: white; background: rgba(255,255,255,0.1); }
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .container {
+    padding: 30px 15px;
+  }
+  
+  .controls {
+    padding: 25px 20px;
+  }
+  
+  .controls-grid {
+    gap: 15px;
+  }
+  
+  .room {
+    width: 45px;
+    height: 45px;
+    font-size: 12px;
+    border-radius: 12px;
+  }
+  
+  .lift-box {
+    width: 40px;
+    height: 45px;
+    font-size: 16px;
+  }
+  
+  .floor-content {
+    gap: 15px;
+    justify-content: flex-start;
+  }
+
+  .legend {
+    gap: 15px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 25px 15px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 12px;
+  }
+  
+  .input-group {
+    width: 100%;
+  }
+}

@@ -71,5 +71,4 @@ export const hotelApi = {
 
   // System
   checkHealth: () => apiRequest('/health'),
-  checkDb: () => apiRequest('/db-test'),
 };

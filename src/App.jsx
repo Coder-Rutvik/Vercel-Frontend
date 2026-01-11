@@ -62,11 +62,11 @@ function App() {
       const resp = await hotelApi.bookRooms({ numRooms, checkInDate, checkOutDate });
       if (resp.success) {
         setBookedRooms(resp.data.rooms);
-        setMessage(' Successfully booked rooms!');
+        setMessage('✅ Successfully booked rooms!');
         await fetchRooms();
         setTimeout(() => setBookedRooms([]), 2000);
-      } else setMessage(' ' + resp.message);
-    } catch (e) { setMessage(' Booking failed'); }
+      } else setMessage('❌ ' + resp.message);
+    } catch (e) { setMessage('❌ Booking failed'); }
     finally { setLoading(false); }
   };
 
@@ -77,11 +77,11 @@ function App() {
       const resp = await hotelApi.generateRandomOccupancy();
       if (resp.success) {
         setBookedRooms(resp.data.bookedRooms || []);
-        setMessage(' Random occupancy generated!');
+        setMessage('🎲 Random occupancy generated!');
         await fetchRooms();
         setTimeout(() => setBookedRooms([]), 2000);
       }
-    } catch (e) { setMessage(' Random occupancy failed'); }
+    } catch (e) { setMessage('❌ Random occupancy failed'); }
     finally { setLoading(false); }
   };
 
@@ -92,10 +92,10 @@ function App() {
       const resp = await hotelApi.resetAllBookings();
       if (resp.success) {
         setBookedRooms([]);
-        setMessage(' Reset complete!');
+        setMessage('✅ Reset complete!');
         await fetchRooms();
       }
-    } catch (e) { setMessage(' Reset failed'); }
+    } catch (e) { setMessage('❌ Reset failed'); }
     finally { setLoading(false); }
   };
 

@@ -1,6 +1,4 @@
-const API_BASE_URL = window.location.origin.includes('localhost')
-  ? 'http://localhost:5000/api'
-  : 'https://vercel-backend-dmxo9n5gf-rutvik-kolhes-projects.vercel.app/api';
+const API_BASE_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : '/api';
 
 const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');

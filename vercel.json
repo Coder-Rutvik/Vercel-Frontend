@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/api/:path*",
-            "destination": "https://vercel-backend-dmxo9n5gf-rutvik-kolhes-projects.vercel.app/api/:path*"
+            "destination": "https://vercel-backend-rutvik-kolhes-projects.vercel.app/api/:path*"
         }
     ]
 }

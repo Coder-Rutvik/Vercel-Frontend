@@ -1,5 +1,4 @@
 ﻿import React from 'react';
-
 const Controls = ({
   numRooms, setNumRooms,
   checkInDate, setCheckInDate,
@@ -13,8 +12,16 @@ const Controls = ({
         <div className="input-group">
           <label>No of Rooms</label>
           <input
-            type="number" min="1" max="5" value={numRooms}
-            onChange={(e) => setNumRooms(parseInt(e.target.value) || 1)}
+            type="number"
+            min="1"
+            max="5"
+            value={numRooms}
+            onChange={(e) => {
+              let val = parseInt(e.target.value);
+              if (val > 5) val = 5;
+              if (val < 1) val = 1;
+              setNumRooms(val);
+            }}
             disabled={loading}
           />
         </div>

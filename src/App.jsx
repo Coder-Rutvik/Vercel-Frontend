@@ -62,7 +62,8 @@ function App() {
       const resp = await hotelApi.bookRooms({ numRooms, checkInDate, checkOutDate });
       if (resp.success) {
         setBookedRooms(resp.data.rooms.map(r => r.roomNumber));
-        setMessage('✅ Successfully booked rooms!');
+        const roomList = resp.data.rooms.map(r => r.roomNumber).join(', ');
+        setMessage(`✅ Successfully booked rooms: ${roomList}`);
         await fetchRooms();
         setTimeout(() => setBookedRooms([]), 2000);
       } else setMessage('❌ ' + resp.message);

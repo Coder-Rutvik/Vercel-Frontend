@@ -6,6 +6,17 @@ const Controls = ({
   onBook, onRandom, onReset,
   loading
 }) => {
+  const [activeAction, setActiveAction] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!loading) setActiveAction(null);
+  }, [loading]);
+
+  const handleAction = (action, callback) => {
+    setActiveAction(action);
+    callback();
+  };
+
   return (
     <div className="controls">
       <div className="controls-grid">
@@ -44,14 +55,26 @@ const Controls = ({
       </div>
 
       <div className="button-group">
-        <button className="btn btn-green" onClick={onBook} disabled={loading}>
-          Book
+        <button
+          className="btn btn-green"
+          onClick={() => handleAction('book', onBook)}
+          disabled={loading}
+        >
+          {loading && activeAction === 'book' ? 'Booking...' : 'Book'}
         </button>
-        <button className="btn btn-green" onClick={onRandom} disabled={loading}>
-          Random
+        <button
+          className="btn btn-green"
+          onClick={() => handleAction('random', onRandom)}
+          disabled={loading}
+        >
+          {loading && activeAction === 'random' ? 'Generating...' : 'Random'}
         </button>
-        <button className="btn btn-reset" onClick={onReset} disabled={loading}>
-          Reset
+        <button
+          className="btn btn-reset"
+          onClick={() => handleAction('reset', onReset)}
+          disabled={loading}
+        >
+          {loading && activeAction === 'reset' ? 'Resetting...' : 'Reset'}
         </button>
       </div>
     </div>

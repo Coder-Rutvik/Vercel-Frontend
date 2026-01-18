@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import HotelVisualization from './components/HotelVisualization';
 import Controls from './components/Controls';
 import AuthModal from './components/AuthModal';

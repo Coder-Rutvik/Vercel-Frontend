@@ -8,7 +8,8 @@ export const initializeHotel = () => {
         roomNumber: f * 100 + r,
         status: 'not-booked',
         floor: f,
-        position: r
+        position: r,
+        roomType: r % 2 === 0 ? 'AC' : 'Non-AC'
       });
     }
     hotel.push({ floorNumber: f, rooms: floorRooms });
@@ -20,7 +21,8 @@ export const initializeHotel = () => {
       roomNumber: 1000 + r,
       status: 'not-booked',
       floor: 10,
-      position: r
+      position: r,
+      roomType: r % 2 === 0 ? 'AC' : 'Non-AC'
     });
   }
   hotel.push({ floorNumber: 10, rooms: floor10Rooms });
@@ -28,6 +30,6 @@ export const initializeHotel = () => {
 };
 
 export const calculateOptimalRooms = (hotel, numRoomsReq) => {
-    // Basic logic for visual purposes
-    return { success: true, message: 'Optimization logic' };
+  // Basic logic for visual purposes
+  return { success: true, message: 'Optimization logic' };
 };

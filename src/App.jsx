@@ -11,6 +11,7 @@ function App() {
   const { user, isAuthenticated, logout } = useAuth();
   const [hotel, setHotel] = useState([]);
   const [numRooms, setNumRooms] = useState(1);
+  const [roomType, setRoomType] = useState('Any');
   const [checkInDate, setCheckInDate] = useState(() => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -41,7 +42,11 @@ function App() {
           const fIdx = room.floor - 1;
           if (updatedHotel[fIdx]) {
             const rIdx = updatedHotel[fIdx].rooms.findIndex(r => r.roomNumber === room.roomNumber);
-            if (rIdx !== -1) updatedHotel[fIdx].rooms[rIdx].status = room.status;
+            if (rIdx !== -1) {
+              updatedHotel[fIdx].rooms[rIdx].status = room.status;
+              updatedHotel[fIdx].rooms[rIdx].roomType = room.roomType;
+              updatedHotel[fIdx].rooms[rIdx].basePrice = room.basePrice;
+            }
           }
         });
         setHotel(updatedHotel);
@@ -59,7 +64,7 @@ function App() {
     if (!isAuthenticated) { setShowAuthModal(true); return; }
     setLoading(true); setMessage('');
     try {
-      const resp = await hotelApi.bookRooms({ numRooms, checkInDate, checkOutDate });
+      const resp = await hotelApi.bookRooms({ numRooms, checkInDate, checkOutDate, roomType });
       if (resp.success) {
         setBookedRooms(resp.data.rooms.map(r => r.roomNumber));
         const roomList = resp.data.rooms.map(r => `Room ${r.roomNumber} (Floor ${r.floor})`).join(', ');
@@ -130,6 +135,7 @@ function App() {
 
         <Controls
           numRooms={numRooms} setNumRooms={setNumRooms}
+          roomType={roomType} setRoomType={setRoomType}
           checkInDate={checkInDate} setCheckInDate={setCheckInDate}
           checkOutDate={checkOutDate} setCheckOutDate={setCheckOutDate}
           onBook={handleBook} onRandom={handleRandom} onReset={handleReset}

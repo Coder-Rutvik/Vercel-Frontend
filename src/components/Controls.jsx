@@ -1,6 +1,7 @@
 import React from 'react';
 const Controls = ({
   numRooms, setNumRooms,
+  roomType, setRoomType,
   checkInDate, setCheckInDate,
   checkOutDate, setCheckOutDate,
   onBook, onRandom, onReset,
@@ -35,6 +36,18 @@ const Controls = ({
             }}
             disabled={loading}
           />
+        </div>
+        <div className="input-group">
+          <label>Type</label>
+          <select
+            value={roomType}
+            onChange={(e) => setRoomType(e.target.value)}
+            disabled={loading}
+          >
+            <option value="Any">Any Type</option>
+            <option value="AC">AC (₹1500)</option>
+            <option value="Non-AC">Non-AC (₹1000)</option>
+          </select>
         </div>
         <div className="input-group">
           <label>Check-in</label>

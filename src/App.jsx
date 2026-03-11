@@ -68,7 +68,7 @@ function App() {
       if (resp.success) {
         setBookedRooms(resp.data.rooms.map(r => r.roomNumber));
         const roomList = resp.data.rooms.map(r => `Room ${r.roomNumber} (Floor ${r.floor})`).join(', ');
-        setMessage(`✅ Successfully booked: ${roomList}`);
+        setMessage(`✅ Successfully booked: ${roomList} (Total Bill: ₹${resp.data.totalPrice})`);
         await fetchRooms();
         setTimeout(() => setBookedRooms([]), 2000);
       } else setMessage('❌ ' + resp.message);

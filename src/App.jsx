@@ -86,7 +86,7 @@ function App() {
         await fetchRooms();
         setTimeout(() => setBookedRooms([]), 2000);
       } else setMessage('❌ ' + resp.message);
-    } catch (e) { setMessage('❌ Booking failed'); }
+    } catch (e) { setMessage('❌ Booking failed: ' + (e.message || 'Unknown error')); console.error(e); }
     finally { setLoading(false); }
   };
 

@@ -45,8 +45,10 @@ const Controls = ({
             disabled={loading}
           >
             <option value="Any">Any Type</option>
-            <option value="AC">AC (₹1500)</option>
-            <option value="Non-AC">Non-AC (₹1000)</option>
+            <option value="Standard">Standard (₹1000)</option>
+            <option value="Deluxe (AC)">Deluxe AC (₹2000)</option>
+            <option value="Suite">Suite (₹4000)</option>
+            <option value="Premium">Premium (₹7000)</option>
           </select>
         </div>
         <div className="input-group">

@@ -10,7 +10,6 @@ import InventoryDashboard from './components/InventoryDashboard';
 import CustomerQrMenu from './components/CustomerQrMenu';
 import { useAuth } from './context/AuthContext';
 import { hotelApi } from './api/config';
-import { initializeHotel } from './utils/bookingAlgorithm';
 import './styles/App.css';
 
 function App() {

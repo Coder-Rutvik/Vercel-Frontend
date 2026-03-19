@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { restaurantApi, hotelApi } from '../api/config';
 import './MenuOrdering.css';
 
+// Temporary Dummy Menu if none in DB
+const initialDummyMenu = [
+  { id: '1', name: 'Paneer Butter Masala', category: 'Indian', price: 250, type: 'veg' },
+  { id: '2', name: 'Chicken Tikka', category: 'Indian', price: 350, type: 'non-veg' },
+  { id: '3', name: 'Hakka Noodles', category: 'Chinese', price: 180, type: 'veg' },
+  { id: '4', name: 'Margherita Pizza', category: 'Italian', price: 300, type: 'veg' },
+];
+
 const MenuOrdering = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [cart, setCart] = useState([]);
@@ -36,14 +44,6 @@ const MenuOrdering = () => {
     };
     fetchData();
   }, []);
-
-  // Temporary Dummy Menu if none in DB
-  const initialDummyMenu = [
-    { id: '1', name: 'Paneer Butter Masala', category: 'Indian', price: 250, type: 'veg' },
-    { id: '2', name: 'Chicken Tikka', category: 'Indian', price: 350, type: 'non-veg' },
-    { id: '3', name: 'Hakka Noodles', category: 'Chinese', price: 180, type: 'veg' },
-    { id: '4', name: 'Margherita Pizza', category: 'Italian', price: 300, type: 'veg' },
-  ];
 
   const addToCart = (item) => {
     setCart(prev => {

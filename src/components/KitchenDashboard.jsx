@@ -8,7 +8,6 @@ const SOCKET_URL = window.location.origin.includes('localhost') ? 'http://localh
 
 const KitchenDashboard = () => {
   const [orders, setOrders] = useState([]);
-  const [socket, setSocket] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch active orders from database on mount

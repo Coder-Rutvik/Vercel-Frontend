@@ -63,7 +63,10 @@ function App() {
 
         setHotel(dynamicHotel);
       }
-    } catch (e) { setMessage(' Error fetching rooms'); }
+    } catch (e) { 
+      setMessage('❌ DB Error: ' + (e.message || 'Error fetching rooms')); 
+      console.error(e);
+    }
     finally { setRoomsLoading(false); }
   };
 

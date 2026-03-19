@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : 'https://express-js-on-vercel-api.vercel.app/api');
+const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : 'https://vercel-backend-lilac-rho.vercel.app/api');
 
 const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');

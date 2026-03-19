@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import HotelVisualization from './components/HotelVisualization';
 import Controls from './components/Controls';
 import AuthModal from './components/AuthModal';
+import KitchenDashboard from './components/KitchenDashboard';
+import MenuOrdering from './components/MenuOrdering';
+import BillingDashboard from './components/BillingDashboard';
+import AccountingDashboard from './components/AccountingDashboard';
+import InventoryDashboard from './components/InventoryDashboard';
+import CustomerQrMenu from './components/CustomerQrMenu';
 import { useAuth } from './context/AuthContext';
 import { hotelApi } from './api/config';
 import { initializeHotel } from './utils/bookingAlgorithm';
 import './styles/App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('hotel');
   const { user, isAuthenticated, logout } = useAuth();
   const [hotel, setHotel] = useState([]);
   const [numRooms, setNumRooms] = useState(1);
@@ -29,35 +36,40 @@ function App() {
   const [roomsLoading, setRoomsLoading] = useState(true);
 
   useEffect(() => {
-    setHotel(initializeHotel());
+    // Initial UI state before fetch
+    setHotel([]);
   }, []);
 
   const fetchRooms = async () => {
     try {
       setRoomsLoading(true);
       const response = await hotelApi.getAllRooms();
-      if (response.success) {
-        const updatedHotel = initializeHotel();
-        response.data.forEach(room => {
-          const fIdx = room.floor - 1;
-          if (updatedHotel[fIdx]) {
-            const rIdx = updatedHotel[fIdx].rooms.findIndex(r => r.roomNumber === room.roomNumber);
-            if (rIdx !== -1) {
-              updatedHotel[fIdx].rooms[rIdx].status = room.status;
-              updatedHotel[fIdx].rooms[rIdx].roomType = room.roomType;
-              updatedHotel[fIdx].rooms[rIdx].basePrice = room.basePrice;
-            }
+      if (response.success && Array.isArray(response.data)) {
+        const rawRooms = response.data;
+        const floorMap = {};
+
+        // Dynamically build SaaS UI matrix grouped by floor from any room count (e.g. 150 rooms)
+        rawRooms.forEach(room => {
+          if (!floorMap[room.floor]) {
+            floorMap[room.floor] = { floorNumber: room.floor, rooms: [] };
           }
+          floorMap[room.floor].rooms.push(room);
         });
-        setHotel(updatedHotel);
+
+        const dynamicHotel = Object.values(floorMap).sort((a, b) => a.floorNumber - b.floorNumber);
+        
+        dynamicHotel.forEach(floor => {
+          floor.rooms.sort((a, b) => a.position - b.position);
+        });
+
+        setHotel(dynamicHotel);
       }
     } catch (e) { setMessage(' Error fetching rooms'); }
     finally { setRoomsLoading(false); }
   };
 
   useEffect(() => {
-    if (isAuthenticated) fetchRooms();
-    else setRoomsLoading(false);
+    fetchRooms();
   }, [isAuthenticated]);
 
   const handleBook = async () => {
@@ -133,22 +145,78 @@ function App() {
           )}
         </div>
 
-        <Controls
-          numRooms={numRooms} setNumRooms={setNumRooms}
-          roomType={roomType} setRoomType={setRoomType}
-          checkInDate={checkInDate} setCheckInDate={setCheckInDate}
-          checkOutDate={checkOutDate} setCheckOutDate={setCheckOutDate}
-          onBook={handleBook} onRandom={handleRandom} onReset={handleReset}
-          loading={loading || roomsLoading}
-        />
+        <div className="tabs" style={{ display: 'flex', gap: '10px', justifyContent: 'center', margin: '20px 0', flexWrap: 'wrap' }}>
+          <button 
+            className={`header-btn ${activeTab === 'hotel' ? 'active' : ''}`}
+            onClick={() => setActiveTab('hotel')}
+          >
+            🏨 Hotel View
+          </button>
+          <button 
+            className={`header-btn ${activeTab === 'menu' ? 'active' : ''}`}
+            onClick={() => setActiveTab('menu')}
+          >
+            🍽️ Order Food
+          </button>
+          <button 
+            className={`header-btn ${activeTab === 'kitchen' ? 'active' : ''}`}
+            onClick={() => setActiveTab('kitchen')}
+          >
+            🧑‍🍳 Kitchen KOT
+          </button>
+          <button 
+            className={`header-btn ${activeTab === 'billing' ? 'active' : ''}`}
+            onClick={() => setActiveTab('billing')}
+          >
+            🧾 Check Out / Billing
+          </button>
+          <button 
+            className={`header-btn ${activeTab === 'accounting' ? 'active' : ''}`}
+            onClick={() => setActiveTab('accounting')}
+          >
+            📊 Accounting P&L
+          </button>
+          <button 
+            className={`header-btn ${activeTab === 'inventory' ? 'active' : ''}`}
+            onClick={() => setActiveTab('inventory')}
+          >
+            📦 Inventory/Stock
+          </button>
+          <button 
+            className={`header-btn ${activeTab === 'qrmenu' ? 'active' : ''}`}
+            onClick={() => setActiveTab('qrmenu')}
+          >
+            📱 QR Scan (Demo)
+          </button>
+        </div>
 
-        {roomsLoading ? (
-          <div style={{ textAlign: 'center', color: 'white', padding: '40px', fontSize: '20px' }}>
-            ✨ Polishing the floors...
-          </div>
-        ) : (
-          <HotelVisualization hotel={hotel} bookedRooms={bookedRooms} />
+        {activeTab === 'hotel' && (
+          <>
+            <Controls
+              numRooms={numRooms} setNumRooms={setNumRooms}
+              roomType={roomType} setRoomType={setRoomType}
+              checkInDate={checkInDate} setCheckInDate={setCheckInDate}
+              checkOutDate={checkOutDate} setCheckOutDate={setCheckOutDate}
+              onBook={handleBook} onRandom={handleRandom} onReset={handleReset}
+              loading={loading || roomsLoading}
+            />
+
+            {roomsLoading ? (
+              <div style={{ textAlign: 'center', color: 'white', padding: '40px', fontSize: '20px' }}>
+                ✨ Polishing the floors...
+              </div>
+            ) : (
+              <HotelVisualization hotel={hotel} bookedRooms={bookedRooms} />
+            )}
+          </>
         )}
+
+        {activeTab === 'kitchen' && <KitchenDashboard />}
+        {activeTab === 'menu' && <MenuOrdering />}
+        {activeTab === 'billing' && <BillingDashboard />}
+        {activeTab === 'accounting' && <AccountingDashboard />}
+        {activeTab === 'inventory' && <InventoryDashboard />}
+        {activeTab === 'qrmenu' && <CustomerQrMenu />}
       </div>
     </div>
   );

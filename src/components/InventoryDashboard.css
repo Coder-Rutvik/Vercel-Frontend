@@ -1,0 +1,88 @@
+.inventory-dashboard {
+  color: white;
+  margin-top: 20px;
+}
+.inventory-dashboard h2 {
+  text-align: center;
+  color: #ff9800;
+  margin-bottom: 20px;
+}
+.inventory-grid {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.stock-list-panel {
+  flex: 2;
+  background: rgba(30, 30, 35, 0.9);
+  padding: 20px;
+  border-radius: 12px;
+  min-width: 300px;
+}
+.add-stock-panel {
+  flex: 1;
+  background: rgba(20, 20, 25, 0.9);
+  padding: 20px;
+  border-radius: 12px;
+  border-top: 3px solid #ff9800;
+  min-width: 300px;
+  height: fit-content;
+}
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.inventory-table th, .inventory-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.inventory-table th { background: rgba(0,0,0,0.4); }
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.badge.safe { background: #4caf50; color: white; }
+.badge.warning { background: #f44336; color: white; animation: pulse 2s infinite; }
+
+.inventory-form .form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.inventory-form label {
+  color: #ccc;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.inventory-form input, .inventory-form select {
+  padding: 10px;
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 6px;
+}
+.btn-save-stock {
+  width: 100%;
+  padding: 12px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.btn-save-stock:hover {
+  background: #e68a00;
+}
+.inventory-alert {
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+.inventory-alert.success { background: #4caf50; }

@@ -1,4 +1,4 @@
-const API_BASE_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : '/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.origin.includes('localhost') ? 'http://localhost:5000/api' : 'https://express-js-on-vercel-api.vercel.app/api');
 
 const apiRequest = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
@@ -71,4 +71,45 @@ export const hotelApi = {
 
   // System
   checkHealth: () => apiRequest('/health'),
+};
+
+export const restaurantApi = {
+  getMenu: () => apiRequest('/restaurant/menu'),
+  addMenuItem: (itemData) => apiRequest('/restaurant/menu', {
+    method: 'POST',
+    body: JSON.stringify(itemData),
+  }),
+  createOrder: (orderData) => apiRequest('/restaurant/order', {
+    method: 'POST',
+    body: JSON.stringify(orderData),
+  }),
+  getActiveOrders: () => apiRequest('/restaurant/orders/active'),
+  updateOrderStatus: (id, status) => apiRequest(`/restaurant/order/${id}/status`, {
+    method: 'PUT',
+    body: JSON.stringify({ status }),
+  }),
+};
+
+export const billingApi = {
+  getCombinedBill: (bookingId) => apiRequest(`/billing/${bookingId}`),
+  payCheckout: (bookingId, paymentMode) => apiRequest(`/billing/${bookingId}/pay`, {
+    method: 'POST',
+    body: JSON.stringify({ paymentMode }),
+  }),
+};
+
+export const accountingApi = {
+  addExpense: (expenseData) => apiRequest(`/accounting/expense`, {
+    method: 'POST',
+    body: JSON.stringify(expenseData),
+  }),
+  getDashboardMetrics: () => apiRequest(`/accounting/dashboard`),
+};
+
+export const inventoryApi = {
+  getInventory: () => apiRequest(`/inventory`),
+  addOrUpdateInventory: (itemData) => apiRequest(`/inventory`, {
+    method: 'POST',
+    body: JSON.stringify(itemData),
+  }),
 };

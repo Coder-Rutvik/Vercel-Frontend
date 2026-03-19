@@ -1,0 +1,101 @@
+.kitchen-dashboard {
+  padding: 20px;
+  background: rgba(20, 20, 25, 0.9);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  margin-top: 20px;
+}
+
+.kitchen-dashboard h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ff9800;
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.order-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 15px;
+  border-left: 5px solid #666;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+}
+
+.order-card.status-pending { border-left-color: #f44336; }
+.order-card.status-preparing { border-left-color: #ffeb3b; }
+.order-card.status-prepared { border-left-color: #4caf50; }
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 5px;
+}
+
+.order-header h4 { margin: 0; font-size: 16px; }
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge.pending { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+.badge.preparing { background: rgba(255, 235, 59, 0.2); color: #ffeb3b; }
+.badge.prepared { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+
+.order-meta {
+  font-size: 14px;
+  color: #aaa;
+  margin: 5px 0 10px 0;
+}
+
+.order-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.order-items li {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 15px;
+  border-bottom: 1px dashed rgba(255,255,255,0.05);
+}
+
+.order-actions {
+  display: flex;
+  justify-content: stretch;
+}
+
+.order-actions button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.order-actions button:hover { opacity: 0.9; }
+
+.btn-preparing { background: #ff9800; color: white; }
+.btn-prepared { background: #4caf50; color: white; }
+.btn-delivered { background: #2196f3; color: white; }

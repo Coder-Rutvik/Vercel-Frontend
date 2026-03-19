@@ -1,0 +1,89 @@
+.menu-ordering-container {
+  display: flex;
+  gap: 20px;
+  color: white;
+  margin-top: 20px;
+}
+
+.menu-section {
+  flex: 2;
+  background: rgba(20, 20, 25, 0.9);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.cart-section {
+  flex: 1;
+  background: rgba(30, 30, 35, 0.9);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ff9800;
+  height: fit-content;
+}
+
+.menu-alert {
+  padding: 10px;
+  background: #4caf50;
+  color: white;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.menu-item-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.menu-item-card:hover {  transform: translateY(-2px); }
+
+.veg-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.veg-badge.veg { background: #4caf50; }
+.veg-badge.non-veg { background: #f44336; }
+
+.item-details h4 { margin: 0 0 5px 0; font-size: 16px; }
+.item-details p { margin: 0; color: #ff9800; font-weight: bold; }
+.category-label { color: #aaa; font-size: 11px; text-transform: uppercase; }
+
+.add-btn {
+  margin-top: 10px;
+  padding: 8px;
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.room-selector { margin-bottom: 20px; display: flex; flex-direction: column; gap: 5px; }
+.room-selector select { padding: 10px; background: #333; color: white; border: 1px solid #555; border-radius: 4px; }
+
+.cart-items { display: flex; flex-direction: column; gap: 10px; }
+.cart-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 4px;}
+.cart-item-info { display: flex; flex-direction: column; }
+.remove-btn { background: transparent; border: none; cursor: pointer; color: white; }
+
+.cart-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-top: 15px; border-top: 1px solid #555; padding-top: 15px; color: #ff9800; }
+.place-order-btn { margin-top: 15px; width: 100%; padding: 12px; background: #4caf50; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+.place-order-btn:hover { background: #43a047; }

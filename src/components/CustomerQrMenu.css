@@ -1,0 +1,124 @@
+/* Mobile-first CSS for QR Ordering */
+.qr-container {
+  background: #f5f5f5;
+  min-height: 100vh;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  padding-bottom: 120px; /* space for floating cart */
+  position: absolute;
+  top: 0; left: 0; right: 0; /* Cover full screen to mimic standalone app */
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.qr-header {
+  background: white;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.qr-header h1 {
+  margin: 0;
+  color: #e91e63;
+  font-size: 24px;
+}
+.qr-header p { margin: 5px 0 0 0; color: #666; font-size: 14px; }
+
+.qr-alert {
+  background: #4caf50;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  position: sticky;
+  top: 0; z-index: 10;
+}
+
+.qr-body { padding: 15px; max-width: 600px; margin: 0 auto; }
+
+.qr-table-input {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qr-table-input label { font-weight: bold; color: #333; }
+.qr-table-input input {
+  padding: 10px;
+  width: 100px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  border: 2px solid #e91e63;
+  border-radius: 6px;
+  outline: none;
+}
+
+.qr-menu-list { display: flex; flex-direction: column; gap: 15px; }
+
+.qr-menu-item {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.item-info h4 { margin: 0 0 5px 0; font-size: 16px; display: flex; align-items: center; gap: 5px;}
+.veg-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #333; }
+.veg-dot.veg { background: #4caf50; }
+.veg-dot.non-veg { background: #f44336; }
+.price { margin: 0; font-weight: bold; color: #e91e63; }
+.item-info small { color: #888; font-size: 12px; }
+
+.btn-add {
+  padding: 10px 20px;
+  background: #fff;
+  border: 1px solid #e91e63;
+  color: #e91e63;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-add:active { background: #e91e63; color: white; }
+
+.qr-cart-floating {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  max-height: 50vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-summary { display: flex; justify-content: space-between; font-size: 18px; color: #333; margin-bottom: 10px; }
+.cart-details { overflow-y: auto; margin-bottom: 10px; border-top: 1px solid #eee; padding-top: 10px;}
+.cart-row { display: flex; justify-content: space-between; padding: 5px 0; color: #555;}
+.cart-row button { background: none; border: none; color: #f44336; font-size: 16px; font-weight: bold;}
+
+.btn-place-order {
+  width: 100%;
+  padding: 15px;
+  background: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.4);
+}

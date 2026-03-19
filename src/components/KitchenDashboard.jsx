@@ -29,7 +29,6 @@ const KitchenDashboard = () => {
 
     // Setup Socket.io
     const newSocket = io(SOCKET_URL);
-    setSocket(newSocket);
 
     newSocket.on('connect', () => {
       newSocket.emit('join-kitchen');

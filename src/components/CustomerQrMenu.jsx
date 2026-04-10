@@ -1,121 +1,165 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { restaurantApi } from '../api/config';
 import './CustomerQrMenu.css';
+
+function getInitialTableNumber() {
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get('table');
+    if (fromUrl != null && String(fromUrl).trim() !== '') {
+      return String(fromUrl).trim();
+    }
+  } catch {
+    /* ignore */
+  }
+  try {
+    const saved = localStorage.getItem('hotelQrTable');
+    if (saved != null && String(saved).trim() !== '') return String(saved).trim();
+  } catch {
+    /* ignore */
+  }
+  return '1';
+}
 
 const CustomerQrMenu = () => {
   const [menu, setMenu] = useState([]);
   const [cart, setCart] = useState([]);
-  const [tableNumber, setTableNumber] = useState('');
+  const [tableNumber, setTableNumber] = useState(getInitialTableNumber);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [menuError, setMenuError] = useState('');
 
-  useEffect(() => {
-    const loadMenu = async () => {
-      try {
-        const res = await restaurantApi.getMenu();
-        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
-          setMenu(res.data);
-        } else {
-          // fallback
-          setMenu([
-            { id: '1', name: 'Paneer Butter Masala', category: 'Indian', price: 250, type: 'veg' },
-            { id: '2', name: 'Chicken Tikka', category: 'Indian', price: 350, type: 'non-veg' }
-          ]);
-        }
-      } catch (err) {
-        // Mock fallback for UI rendering without DB
-        setMenu([
-          { id: '1', name: 'Paneer Butter Masala', category: 'Indian', price: 250, type: 'veg' },
-          { id: '2', name: 'Chicken Tikka', category: 'Indian', price: 350, type: 'non-veg' },
-          { id: '3', name: 'Hakka Noodles', category: 'Chinese', price: 180, type: 'veg' },
-          { id: '4', name: 'Margherita Pizza', category: 'Italian', price: 300, type: 'veg' },
-        ]);
-      } finally {
-        setLoading(false);
+  const loadMenu = useCallback(async () => {
+    setLoading(true);
+    setMenuError('');
+    try {
+      const res = await restaurantApi.getMenu();
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        setMenu(res.data);
+      } else {
+        setMenu([]);
+        setMenuError('Menu is empty or API error. Click Retry or start the backend.');
       }
-    };
-    loadMenu();
+    } catch (err) {
+      setMenu([]);
+      setMenuError(err.message || 'Could not load menu.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    loadMenu();
+  }, [loadMenu]);
+
+  useEffect(() => {
+    try {
+      if (tableNumber) localStorage.setItem('hotelQrTable', String(tableNumber));
+    } catch {
+      /* ignore */
+    }
+  }, [tableNumber]);
+
   const addToCart = (item) => {
-    setCart(prev => {
-      const exist = prev.find(i => i.id === item.id || i.name === item.name);
+    setCart((prev) => {
+      const exist = prev.find((i) => i.id === item.id || i.name === item.name);
       if (exist) {
-        return prev.map(i => (i.id === item.id || i.name === item.name) ? { ...i, quantity: i.quantity + 1 } : i);
+        return prev.map((i) =>
+          i.id === item.id || i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i
+        );
       }
       return [...prev, { ...item, quantity: 1 }];
     });
   };
 
   const removeFromCart = (name) => {
-    setCart(prev => prev.filter(i => i.name !== name));
+    setCart((prev) => prev.filter((i) => i.name !== name));
   };
 
   const placeOrder = async () => {
-    if (!tableNumber) return alert('Please enter your Table Number before ordering!');
-    if (cart.length === 0) return alert('Your cart is empty!');
+    const table = String(tableNumber || '').trim() || '1';
+    if (cart.length === 0) {
+      setMessage('❌ Your cart is empty.');
+      return;
+    }
 
     try {
-      const orderItems = cart.map(item => ({
+      const orderItems = cart.map((item) => ({
         menuItemId: item.id || null,
         name: item.name,
         quantity: item.quantity,
         price: item.price
       }));
 
-      // Fire directly to Kitchen KOT securely
       const res = await restaurantApi.createOrder({
-        tableNumber,
+        tableNumber: table,
         items: orderItems,
-        bookingId: null // Walk-in QR customer
+        bookingId: null
       });
 
-      if (res.success || res) {
-        setMessage('✅ Your order has been placed to the Kitchen! Please wait.');
+      if (res.success) {
+        setMessage('✅ Order sent to the kitchen.');
         setCart([]);
         setTimeout(() => setMessage(''), 5000);
+      } else {
+        setMessage('❌ ' + (res.message || 'Order failed'));
       }
     } catch (err) {
-      // In case auth is strictly blocking, allow UI mimic for MVP
-      setMessage('✅ Your order has been placed to the Kitchen! Please wait.');
-      setCart([]);
-      setTimeout(() => setMessage(''), 5000);
+      setMessage('❌ ' + (err.message || 'Order failed — log in and ensure the API is running.'));
     }
   };
 
-  if (loading) return <div style={{color:'black', padding:'20px'}}>Loading QR Menu...</div>;
+  if (loading) {
+    return <div className="qr-loading">Loading menu…</div>;
+  }
 
   return (
     <div className="qr-container">
       <div className="qr-header">
-        <h1>📱 Scan & Order</h1>
-        <p>Welcome! Order directly to your table.</p>
+        <h1>📱 QR menu (demo)</h1>
+        <p>
+          Table defaults to <strong>1</strong> (or use <code>?table=5</code> in the URL). You must be{' '}
+          <strong>logged in</strong> for the kitchen to receive a real order.
+        </p>
       </div>
 
       {message && <div className="qr-alert">{message}</div>}
 
+      {menuError && (
+        <div className="qr-menu-error">
+          <span>{menuError}</span>
+          <button type="button" onClick={loadMenu}>
+            Retry
+          </button>
+        </div>
+      )}
+
       <div className="qr-body">
         <div className="qr-table-input">
-          <label>Your Table Number:</label>
-          <input 
-            type="number" 
-            placeholder="e.g. 5" 
-            value={tableNumber} 
-            onChange={e => setTableNumber(e.target.value)} 
+          <label htmlFor="qr-table">Table number</label>
+          <input
+            id="qr-table"
+            type="text"
+            inputMode="numeric"
+            placeholder="e.g. 5"
+            value={tableNumber}
+            onChange={(e) => setTableNumber(e.target.value)}
           />
+          <small className="qr-table-hint">Tip: bookmark this page with <code>?table=YOUR_TABLE</code></small>
         </div>
 
         <div className="qr-menu-list">
-          {menu.map(item => (
-            <div key={item.id} className="qr-menu-item">
+          {menu.map((item) => (
+            <div key={item.id || item.name} className="qr-menu-item">
               <div className="item-info">
                 <h4>
-                   <span className={`veg-dot ${item.type}`}></span> {item.name}
+                  <span className={`veg-dot ${item.type}`} /> {item.name}
                 </h4>
-                <p className="price">₹{item.price}</p>
+                <p className="price">₹{parseFloat(item.price).toFixed(2)}</p>
                 <small>{item.category}</small>
               </div>
-              <button className="btn-add" onClick={() => addToCart(item)}>ADD</button>
+              <button type="button" className="btn-add" onClick={() => addToCart(item)}>
+                ADD
+              </button>
             </div>
           ))}
         </div>
@@ -124,19 +168,27 @@ const CustomerQrMenu = () => {
           <div className="qr-cart-floating">
             <div className="cart-summary">
               <span>{cart.length} items</span>
-              <strong>₹{cart.reduce((a,c) => a + (c.price * c.quantity), 0)}</strong>
+              <strong>
+                ₹{cart.reduce((a, c) => a + parseFloat(c.price) * c.quantity, 0).toFixed(2)}
+              </strong>
             </div>
-            
+
             <div className="cart-details">
-              {cart.map((c,i) => (
+              {cart.map((c, i) => (
                 <div key={i} className="cart-row">
-                  <span>{c.quantity}x {c.name}</span>
-                  <button onClick={() => removeFromCart(c.name)}>x</button>
+                  <span>
+                    {c.quantity}× {c.name}
+                  </span>
+                  <button type="button" onClick={() => removeFromCart(c.name)}>
+                    ×
+                  </button>
                 </div>
               ))}
             </div>
 
-            <button onClick={placeOrder} className="btn-place-order">Send to Kitchen 🧑‍🍳</button>
+            <button type="button" onClick={placeOrder} className="btn-place-order">
+              Send to kitchen
+            </button>
           </div>
         )}
       </div>

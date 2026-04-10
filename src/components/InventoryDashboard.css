@@ -1,11 +1,102 @@
 .inventory-dashboard {
   color: white;
   margin-top: 20px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 12px 40px;
 }
+
+.inventory-dashboard--loading {
+  text-align: center;
+  padding: 40px;
+  color: #cbd5e1;
+}
+
 .inventory-dashboard h2 {
   text-align: center;
   color: #ff9800;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.inventory-lead {
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 720px;
+  margin: 0 auto 20px;
+}
+
+.inventory-seed-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
+.btn-seed {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 152, 0, 0.55);
+  background: rgba(255, 152, 0, 0.18);
+  color: #ffedd5;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-seed:hover:not(:disabled) {
+  background: rgba(255, 152, 0, 0.32);
+}
+
+.btn-seed:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-seed--secondary {
+  border-color: rgba(148, 163, 184, 0.4);
+  background: rgba(30, 41, 59, 0.6);
+  color: #e2e8f0;
+}
+
+.inventory-empty {
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+.inventory-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+}
+
+.preset-hint {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0 0 10px 0;
+}
+
+.preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.preset-chip {
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 152, 0, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fed7aa;
+  cursor: pointer;
+}
+
+.preset-chip:hover {
+  background: rgba(255, 152, 0, 0.15);
 }
 .inventory-grid {
   display: flex;
@@ -86,3 +177,9 @@
   margin-bottom: 20px;
 }
 .inventory-alert.success { background: #4caf50; }
+.inventory-alert.error { background: #c62828; color: white; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}

@@ -1,3 +1,63 @@
+.menu-ordering-loading {
+  color: #e2e8f0;
+  padding: 32px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.menu-error-banner {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fecaca;
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.menu-error-banner p {
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+  line-height: 1.45;
+}
+
+.menu-retry-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #fca5a5;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menu-empty {
+  color: #94a3b8;
+  text-align: center;
+  padding: 32px;
+}
+
+.room-selector-hint {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 8px 0 0 0;
+}
+
+.cart-notes-input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
 .menu-ordering-container {
   display: flex;
   gap: 20px;

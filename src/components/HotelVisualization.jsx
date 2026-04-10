@@ -1,8 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import Floor from './Floor';
 
-const HotelVisualization = ({ hotel, bookedRooms }) => {
-  const [selectedFloor, setSelectedFloor] = useState('1'); // Default to Floor 1
+const HotelVisualization = ({
+  hotel,
+  bookedRooms,
+  manualSelections,
+  onRoomClick,
+}) => {
+  const [selectedFloor, setSelectedFloor] = useState('All'); // PRO UX FIX: Default to All Overview instead of jumping to Floor 1
   const [selectedType, setSelectedType] = useState('All');
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,7 +21,11 @@ const HotelVisualization = ({ hotel, bookedRooms }) => {
 
     // 1. Floor Filter
     if (selectedFloor !== 'All') {
-      filtered = filtered.filter(f => f.floorNumber.toString() === selectedFloor);
+      const floorLimit = Number(selectedFloor);
+      if (!Number.isNaN(floorLimit)) {
+        // Range mode: show floors from 1 to selectedFloor (inclusive)
+        filtered = filtered.filter(f => Number(f.floorNumber) <= floorLimit);
+      }
     }
 
     // Process room level filters within those floors
@@ -54,13 +63,13 @@ const HotelVisualization = ({ hotel, bookedRooms }) => {
       }}>
           
           <div className="control-group">
-              <label style={{display:'block', fontSize:'12px', color:'#aaa', marginBottom:'5px'}}>📍 Select Floor</label>
-              <select 
-                value={selectedFloor} 
+             <label style={{display:'block', fontSize:'12px', color:'#aaa', marginBottom:'5px'}}>📍 Show Floors Up To</label>
+             <select 
+               value={selectedFloor} 
                 onChange={(e) => setSelectedFloor(e.target.value)}
                 style={{padding:'8px', borderRadius:'6px', background:'#222', color:'white', border:'1px solid #444'}}
               >
-                  <option value="All">All Floors (Overview)</option>
+                <option value="All">All Floors (Overview)</option>
                   {allFloors.map(f => (
                       <option key={f.floorNumber} value={f.floorNumber}>Floor {f.floorNumber}</option>
                   ))}
@@ -121,6 +130,8 @@ const HotelVisualization = ({ hotel, bookedRooms }) => {
                     key={floor.floorNumber}
                     floor={floor}
                     bookedRooms={bookedRooms}
+                    manualSelections={manualSelections}
+                    onRoomClick={onRoomClick}
                 />
             ))
         )}
@@ -141,7 +152,11 @@ const HotelVisualization = ({ hotel, bookedRooms }) => {
         </div>
         <div className="legend-item">
           <div className="legend-bulb selected"></div>
-          <span>🔵 Currently Selected</span>
+          <span>🟠 Recently Booked</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-bulb manual-selection"></div>
+          <span>🔵 Click to Selection</span>
         </div>
       </div>
     </div>

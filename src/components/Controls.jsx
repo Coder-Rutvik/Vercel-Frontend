@@ -4,8 +4,10 @@ const Controls = ({
   roomType, setRoomType,
   checkInDate, setCheckInDate,
   checkOutDate, setCheckOutDate,
+  floorPreference, setFloorPreference,
   onBook, onRandom, onReset,
-  loading
+  loading,
+  canBook = true
 }) => {
   const [activeAction, setActiveAction] = React.useState(null);
 
@@ -57,7 +59,21 @@ const Controls = ({
             type="date" value={checkInDate}
             onChange={(e) => setCheckInDate(e.target.value)}
             disabled={loading}
+            max={checkOutDate || undefined}
           />
+        </div>
+        <div className="input-group">
+          <label>Pref. Floor</label>
+          <select 
+            value={floorPreference} 
+            onChange={(e) => setFloorPreference(e.target.value)}
+            disabled={loading}
+          >
+            <option value="Any">Any Floor</option>
+            {[...Array(15)].map((_, i) => (
+              <option key={i+1} value={i+1}>Floor {i+1}</option>
+            ))}
+          </select>
         </div>
         <div className="input-group">
           <label>Check-out</label>
@@ -65,15 +81,20 @@ const Controls = ({
             type="date" value={checkOutDate}
             onChange={(e) => setCheckOutDate(e.target.value)}
             disabled={loading}
+            min={checkInDate || undefined}
           />
         </div>
       </div>
+
+      <p className="controls-guest-hint">
+        Guest name, email, and phone come from your <strong>logged-in account</strong> (register / profile). No separate form on this screen.
+      </p>
 
       <div className="button-group">
         <button
           className="btn btn-green"
           onClick={() => handleAction('book', onBook)}
-          disabled={loading}
+          disabled={loading || !canBook}
         >
           {loading && activeAction === 'book' ? 'Booking...' : 'Book'}
         </button>

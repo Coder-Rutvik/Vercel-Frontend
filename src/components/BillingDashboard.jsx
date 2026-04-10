@@ -9,6 +9,8 @@ const BillingDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [paymentMode, setPaymentMode] = useState('upi');
   const [checkoutMessage, setCheckoutMessage] = useState('');
+  const [billError, setBillError] = useState('');
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   useEffect(() => {
     fetchBookings();
@@ -31,12 +33,15 @@ const BillingDashboard = () => {
     try {
       setBillData(null);
       setCheckoutMessage('');
+      setBillError('');
       const res = await billingApi.getCombinedBill(bookingId);
-      if (res.success) {
+      if (res.success && res.data) {
         setBillData(res.data);
+      } else {
+        setBillError(res?.message || 'Could not load invoice.');
       }
     } catch (err) {
-      alert("Failed to load bill");
+      setBillError(err.message || 'Failed to load bill. Check that the API is running and you are logged in.');
     }
   };
 
@@ -45,8 +50,11 @@ const BillingDashboard = () => {
     try {
       const res = await billingApi.payCheckout(selectedBooking, paymentMode);
       if (res.success) {
-        setCheckoutMessage('✅ Checkout Complete! Invoice Paid.');
-        setBillData(prev => ({...prev, bill: res.data}));
+        const earned = Number(res?.data?.loyaltyPointsEarned || 0);
+        setCheckoutMessage(
+          `✅ Checkout Complete! Invoice Paid.${earned > 0 ? ` Loyalty points added: +${earned}` : ''}`
+        );
+        setBillData(prev => ({...prev, bill: res?.data?.bill || prev?.bill}));
         setTimeout(() => {
           setSelectedBooking(null);
           setBillData(null);
@@ -58,19 +66,61 @@ const BillingDashboard = () => {
     }
   };
 
+  const handleDownloadPdf = async () => {
+    if (!selectedBooking) {
+      setCheckoutMessage('❌ Select a booking first to download invoice PDF.');
+      return;
+    }
+    setDownloadingPdf(true);
+    try {
+      const blob = await billingApi.downloadInvoicePdf(selectedBooking);
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `invoice-${String(selectedBooking).slice(0, 8)}.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.URL.revokeObjectURL(url);
+      setCheckoutMessage('✅ Invoice PDF downloaded.');
+    } catch (err) {
+      setCheckoutMessage('❌ ' + (err.message || 'PDF download failed'));
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
   if (loading) return <div style={{color:'white', padding:'20px'}}>Loading Billing...</div>;
 
   return (
     <div className="billing-dashboard">
-      <h2>🧾 Checkout & Billing Invoice</h2>
+      <h2>🧾 Checkout &amp; billing</h2>
+      <p className="ops-panel-hint billing-dashboard__hint">
+        Select a <strong>confirmed</strong> booking, review room + food on one invoice, then pay to check out. Totals feed into <strong>P&amp;L</strong> after payment.
+      </p>
+
+      {billError && (
+        <div className="billing-error-banner" role="alert">
+          {billError}
+        </div>
+      )}
 
       <div className="billing-selector">
         <label>Select Room Booking to Checkout:</label>
         <select 
           value={selectedBooking || ''} 
           onChange={(e) => {
-            setSelectedBooking(e.target.value);
-            if(e.target.value) loadBill(e.target.value);
+            const v = e.target.value;
+            setSelectedBooking(v || null);
+            setBillError('');
+            if (v) loadBill(v);
+            else {
+              setBillData(null);
+            }
           }}
         >
           <option value="">-- View My Active Bookings --</option>
@@ -85,10 +135,18 @@ const BillingDashboard = () => {
       {checkoutMessage && <div className="checkout-alert">{checkoutMessage}</div>}
 
       {billData && (
-        <div className="invoice-container">
+        <div className="invoice-container" id="printable-invoice">
           <div className="invoice-header">
             <h3>Hotel Reservation Invoice</h3>
-            <p>Booking Ref: {billData.booking.bookingId.split('-')[0].toUpperCase()}</p>
+            <div className="invoice-header__meta">
+              <p>Booking Ref: {billData.booking.bookingId.split('-')[0].toUpperCase()}</p>
+              <div className="billing-actions">
+                <button type="button" onClick={handleDownloadPdf} disabled={downloadingPdf}>
+                  {downloadingPdf ? 'Downloading...' : 'Download PDF'}
+                </button>
+                <button type="button" onClick={handlePrint}>Print</button>
+              </div>
+            </div>
           </div>
 
           <table className="invoice-table">
@@ -103,11 +161,25 @@ const BillingDashboard = () => {
                 <td>Room Rent ({billData.booking.rooms.join(', ')})</td>
                 <td>₹{parseFloat(billData.bill.roomTotal).toFixed(2)}</td>
               </tr>
-              {billData.orders && billData.orders.map((order, idx) => (
-                <tr key={idx} className="sub-row">
-                  <td>Food: Order #{order.orderId.substring(0,6)}</td>
-                  <td>₹{parseFloat(order.totalPrice).toFixed(2)}</td>
-                </tr>
+              {billData.orders && billData.orders.map((order) => (
+                <React.Fragment key={order.orderId}>
+                  <tr className="sub-row" style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+                    <td colSpan="2" style={{ fontSize: '12px', color: '#888', paddingTop: '10px' }}>
+                      KOT Order #{order.orderId.substring(0,6)}
+                    </td>
+                  </tr>
+                  {order.items.map((item, itemIdx) => (
+                    <tr key={`${order.orderId}-${itemIdx}`} className="sub-row">
+                      <td style={{ paddingLeft: '20px', fontSize: '14px', color: '#ccc' }}>
+                        🍽️ {item.name} (x{item.quantity})
+                        {item.notes && <span style={{display: 'block', fontSize: '11px', color: '#ffb347'}}>📝 {item.notes}</span>}
+                      </td>
+                      <td style={{ fontSize: '14px', color: '#ccc' }}>
+                        ₹{(parseFloat(item.price) * parseInt(item.quantity || 1)).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </React.Fragment>
               ))}
               <tr className="summary-row">
                 <td>Food Total:</td>

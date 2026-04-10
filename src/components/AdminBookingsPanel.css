@@ -1,0 +1,117 @@
+.admin-bookings {
+  max-width: 1100px;
+  margin: 24px auto 48px;
+  padding: 0 12px;
+  color: #e2e8f0;
+}
+
+.admin-bookings--loading,
+.admin-bookings--error {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.admin-bookings--error button {
+  margin-top: 12px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid #818cf8;
+  background: rgba(99, 102, 241, 0.2);
+  color: #e0e7ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-bookings__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.admin-bookings__head h2 {
+  margin: 0;
+  font-size: 24px;
+  background: linear-gradient(to right, #818cf8, #c084fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-bookings__refresh {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-bookings__hint {
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+.admin-bookings__empty {
+  text-align: center;
+  color: #94a3b8;
+  padding: 32px;
+}
+
+.admin-bookings__wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.admin-bookings__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 800px;
+}
+
+.admin-bookings__table th,
+.admin-bookings__table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-bookings__table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.admin-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: rgba(148, 163, 184, 0.2);
+}
+
+.admin-pill--confirmed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+.admin-pill--cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+.admin-pill--completed {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}

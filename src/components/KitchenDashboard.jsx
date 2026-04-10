@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { restaurantApi } from '../api/config';
+import { restaurantApi, getSocketBaseUrl } from '../api/config';
 import { io } from 'socket.io-client';
 import './KitchenDashboard.css';
-
-// Socket setup based on backend URL
-const SOCKET_URL = window.location.origin.includes('localhost') ? 'http://localhost:5000' : window.location.origin;
 
 const KitchenDashboard = () => {
   const [orders, setOrders] = useState([]);
@@ -28,7 +25,7 @@ const KitchenDashboard = () => {
     fetchOrders();
 
     // Setup Socket.io
-    const newSocket = io(SOCKET_URL);
+    const newSocket = io(getSocketBaseUrl());
 
     newSocket.on('connect', () => {
       newSocket.emit('join-kitchen');
@@ -67,8 +64,11 @@ const KitchenDashboard = () => {
 
   return (
     <div className="kitchen-dashboard">
-      <h2>🧑‍🍳 Kitchen Order Ticket (KOT) Dashboard</h2>
-      
+      <h2>🧑‍🍳 Kitchen KOT</h2>
+      <p className="ops-panel-hint kitchen-dashboard__hint">
+        <strong>Pending → Preparing → Prepared → Delivered.</strong> Orders from <strong>Order food</strong> and <strong>QR menu</strong> show here when the API accepts them.
+      </p>
+
       <div className="orders-grid">
         {orders.length === 0 ? (
           <div className="no-orders text-light">No active orders right now. Kitchen is clear! ✨</div>
@@ -85,9 +85,12 @@ const KitchenDashboard = () => {
               
               <ul className="order-items">
                 {order.items.map((item, idx) => (
-                  <li key={idx}>
-                    <span>{item.name}</span>
-                    <strong>x{item.quantity}</strong>
+                  <li key={idx} style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                      <span>{item.name}</span>
+                      <strong>x{item.quantity}</strong>
+                    </div>
+                    {item.notes && <div style={{ fontSize: '12px', color: '#ffb347', fontStyle: 'italic', marginTop: '4px' }}>📝 Note: {item.notes}</div>}
                   </li>
                 ))}
               </ul>

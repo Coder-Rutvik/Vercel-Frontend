@@ -13,6 +13,11 @@
   color: #ff9800;
 }
 
+.kitchen-dashboard__hint {
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

@@ -1,0 +1,204 @@
+.smart-lift-card {
+  background: rgba(26, 26, 46, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.smart-lift-card.emergency {
+  border: 2px solid #ff4d4d;
+  box-shadow: 0 0 40px rgba(255, 77, 77, 0.2);
+}
+
+.lift-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.lift-header h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.status-indicator {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.status-indicator.operational { color: #00e676; }
+.status-indicator.emergency { color: #ff6b6b; animation: blink 1s infinite alternate; }
+
+.lift-display {
+  background: #000;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #333;
+}
+
+.floor-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.floor-indicator .label {
+  color: #666;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.floor-indicator .digit {
+  color: #f4b400;
+  font-family: 'Digital-7', monospace;
+  font-size: 3rem;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(244, 180, 0, 0.5);
+}
+
+.floor-indicator .direction {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-top: 5px;
+  animation: float 0.8s infinite alternate;
+}
+
+.lift-animation-track {
+  width: 50px;
+  height: 120px;
+  background: #1a1a1a;
+  border-radius: 25px;
+  position: relative;
+  overflow: hidden;
+  border: 4px solid #333;
+}
+
+.lift-car {
+  width: 42px;
+  height: 25px;
+  background: #444;
+  border-radius: 4px;
+  position: absolute;
+  left: 0;
+  transition: bottom 1s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.lift-car.operational { background: #3498db; }
+.lift-car.emergency { background: #ff4d4d; animation: shake 0.2s infinite; }
+
+.lift-door {
+  width: 80%;
+  height: 80%;
+  background: #2c3e50;
+  border: 1px solid #1a1a1a;
+}
+
+.floor-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.floor-btn {
+  padding: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.floor-btn:hover:not(:disabled) {
+  background: #3a3a3a;
+  border-color: #666;
+}
+
+.floor-btn.target {
+  border-color: #3498db;
+  color: #3498db;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.emergency-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.panic-btn {
+  flex: 2;
+  padding: 12px;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:all 0.3s;
+}
+
+.panic-btn.active {
+  background: #e74c3c;
+  animation: shake 0.3s infinite;
+}
+
+.maintenance-btn {
+  flex: 1;
+  padding: 12px;
+  background: #7f8c8d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.lift-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.lift-overlay.emergency { background: rgba(0,0,0,0.85); color: #ff4d4d; }
+.lift-overlay.maintenance { background: rgba(0,0,0,0.85); color: #f4b400; }
+
+.blink { animation: blink 0.5s infinite alternate; }
+
+@keyframes blink { from { opacity: 1; } to { opacity: 0.3; } }
+@keyframes float { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+@keyframes shake { 
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}

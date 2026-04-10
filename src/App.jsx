@@ -141,9 +141,9 @@ function App() {
     if (manualSelections.length > numRooms) {
       setManualSelections(prev => prev.slice(0, numRooms));
     }
-  }, [numRooms]); 
+  }, [numRooms, manualSelections.length]); 
 
-  const fetchRooms = async () => {
+  const fetchRooms = useCallback(async () => {
     try {
       setRoomsLoading(true);
       const response = await hotelApi.getAllRooms({ checkInDate, checkOutDate });
@@ -172,11 +172,11 @@ function App() {
       console.error(e);
     }
     finally { setRoomsLoading(false); }
-  };
+  }, [checkInDate, checkOutDate]);
 
   useEffect(() => {
     fetchRooms();
-  }, [isAuthenticated, checkInDate, checkOutDate]);
+  }, [isAuthenticated, fetchRooms]);
 
   useEffect(() => {
     if (!isAuthenticated) return undefined;
